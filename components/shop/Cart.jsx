@@ -18,7 +18,8 @@ const Cart = () => {
       }),
     });
     const session = await response.json();
-    session.status === 200
+    console.log(session);
+    session.url
       ? (window.location.href = session.url)
       : console.log(session.message);
   }
