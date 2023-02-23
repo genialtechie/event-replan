@@ -1,6 +1,6 @@
 import prisma from '../../prisma/prismaClient';
 import crypto from 'crypto';
-import { buffer } from 'micro';
+import { text } from 'micro';
 const { Client, Environment, ApiError } = require('square');
 
 const SIGNATURE_KEY = process.env.SQUARE_WEBHOOK_SIGNATURE;
@@ -48,20 +48,22 @@ const isFromSquare = (signature, body) => {
   const hmac = crypto.createHmac('sha256', SIGNATURE_KEY);
   hmac.update(NOTIFICATION_URL + body);
   const hash = hmac.digest('base64');
+  console.log('hash', hash);
 
   return hash === signature;
 };
 
 export default async function webhook(req, res) {
   if (req.method === 'POST') {
-    let body = (await buffer(req)).toString();
-    body = JSON.parse(body);
+    let body = await text(req, { encoding: 'utf8' });
     const signature = req.headers['x-square-hmacsha256-signature'];
-    const data = body.data.object.payment;
+    console.log('body', body);
+    console.log('signature', signature);
 
     if (isFromSquare(signature, body)) {
       // signature is valid
       res.status(200).json({ message: 'Signature is valid' });
+      const data = body.data.object.payment;
       console.log('Signature is valid');
       // if (data.status === 'COMPLETED') {
       //   const session = await retrieveOrder(data.order_id);
