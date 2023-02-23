@@ -54,7 +54,7 @@ const isFromSquare = (signature, body) => {
 
 export default async function webhook(req, res) {
   if (req.method === 'POST') {
-    const body = (await buffer(req)).toString();
+    let body = (await buffer(req)).toString();
     body = JSON.parse(body);
     const signature = req.headers['x-square-hmacsha256-signature'];
     const data = body.data.object.payment;
