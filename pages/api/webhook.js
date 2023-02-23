@@ -63,14 +63,14 @@ export default async function webhook(req, res) {
       // signature is valid
       res.status(200).json({ message: 'Signature is valid' });
       console.log('Signature is valid');
-      if (data.status === 'COMPLETED') {
-        const session = await retrieveOrder(data.order_id);
-        console.log(session);
-        const newOrder = await fulfillOrder(session.order);
-        console.log(newOrder);
-      } else {
-        console.log('Payment is not completed');
-      }
+      // if (data.status === 'COMPLETED') {
+      //   const session = await retrieveOrder(data.order_id);
+      //   console.log(session);
+      //   const newOrder = await fulfillOrder(session.order);
+      //   console.log(newOrder);
+      // } else {
+      //   console.log('Payment is not completed');
+      // }
     } else {
       // signature is invalid
       console.log('Signature is invalid');
