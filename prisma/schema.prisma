@@ -28,9 +28,9 @@ model Category {
 model Order {
   id       String         @id @default(uuid()) @map("_id") 
   userId   String?
-  email    String
+  email    String?
   phone    String?
-  address  String
+  address  String?
   total    Float
   products OrderProduct[] 
 }

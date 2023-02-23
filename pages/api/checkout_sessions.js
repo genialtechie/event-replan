@@ -59,6 +59,13 @@ export default async function handler(req, res) {
         order: {
           locationId: process.env.SQUARE_LOCATION_ID,
           lineItems: transformedItems,
+          taxes: [
+            {
+              name: 'Sales Tax',
+              percentage: '7.00',
+              scope: 'ORDER',
+            },
+          ],
         },
       });
       res.status(200).json(session.result.paymentLink);
