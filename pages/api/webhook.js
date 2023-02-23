@@ -60,7 +60,7 @@ export default async function webhook(req, res) {
     if (isFromSquare(signature, body)) {
       // signature is valid
       res.status(200).json({ message: 'Signature is valid' });
-      const data = body.data.object.payment;
+      const data = JSON.parse(body).data.object.payment;
       console.log('Signature is valid');
       if (data.status === 'COMPLETED') {
         const session = await retrieveOrder(data.order_id);
