@@ -6,25 +6,6 @@ const { Client, Environment, ApiError } = require('square');
 const SIGNATURE_KEY = process.env.SQUARE_WEBHOOK_SIGNATURE;
 const NOTIFICATION_URL = process.env.SQUARE_WEBHOOK_URL;
 
-const fulfillOrder = async (order) => {
-  const newOrder = await prisma.order.create({
-    data: {
-      id: order.id,
-      total: order.total_money.amount / 100,
-      products: {
-        createMany: {
-          data: order.line_items.map((item) => ({
-            productId: item.metadata.productId,
-            quantity: item.quantity,
-            rentalDate: item.metadata.rentalDate,
-          })),
-        },
-      },
-    },
-  });
-  return newOrder;
-};
-
 const client = new Client({
   environment: Environment.Production,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -32,13 +13,37 @@ const client = new Client({
 
 const { ordersApi } = client;
 
+const fulfillOrder = async (order) => {
+  try {
+    const newOrder = await prisma.order.create({
+      data: {
+        id: order.id,
+        total: order.total_money.amount / 100,
+        products: {
+          createMany: {
+            data: order.line_items.map((item) => ({
+              productId: item.metadata.productId,
+              quantity: item.quantity,
+              rentalDate: item.metadata.rentalDate,
+            })),
+          },
+        },
+      },
+    });
+    return newOrder;
+  } catch (error) {
+    console.log('Prisma error creating order', error);
+  }
+};
+
 const retrieveOrder = async (orderId) => {
   try {
     const response = await ordersApi.retrieveOrder(orderId);
+    console.log('Order retrieved successfully:', response.result.order);
     return response.result.order;
   } catch (error) {
     if (error instanceof ApiError) {
-      console.log('Errors:', error.result.errors);
+      console.log('Errors:', error);
     }
     throw error;
   }
@@ -63,10 +68,19 @@ export default async function webhook(req, res) {
       const data = JSON.parse(body).data.object.payment;
       console.log('Signature is valid');
       if (data.status === 'COMPLETED') {
+        console.log('Payment is completed');
+
         const session = await retrieveOrder(data.order_id);
-        console.log(session);
-        const newOrder = await fulfillOrder(session.order);
-        console.log(newOrder);
+
+        const newOrder = fulfillOrder(session.order)
+          .then(async () => {
+            await prisma.$disconnect();
+          })
+          .catch(async (e) => {
+            console.error(e);
+            await prisma.$disconnect();
+            process.exit(1);
+          });
       } else {
         console.log('Payment is not completed');
       }
