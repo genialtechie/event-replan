@@ -44,6 +44,14 @@ export default function Product({ product }) {
     setCartOpen(true);
   };
 
+  const disabledDays = product.orders?.map((order) => {
+    return {
+      year: order.rentalDate.getFullYear(),
+      month: order.rentalDate.getMonth() + 1,
+      day: order.rentalDate.getDate(),
+    };
+  });
+
   return (
     <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-3">
       <div className="lg:col-span-2 relative">
@@ -89,6 +97,7 @@ export default function Product({ product }) {
             <MyDatePicker
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
+              disabledDays={disabledDays}
             />
           </label>
           <p className="my-1 text-gray-500 text-xs">

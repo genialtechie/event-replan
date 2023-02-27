@@ -3,7 +3,7 @@ import prisma from './prismaClient';
 export const getAvailableProducts = async () => {
   try {
     const products = await prisma.product.findMany({
-      include: { category: true },
+      include: { category: true, orders: true },
     });
     return products;
   } catch (error) {

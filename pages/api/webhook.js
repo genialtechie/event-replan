@@ -33,6 +33,7 @@ const fulfillOrder = async (order) => {
     return newOrder;
   } catch (error) {
     console.log('Prisma error creating order', error);
+    throw error;
   }
 };
 
@@ -69,18 +70,13 @@ export default async function webhook(req, res) {
       console.log('Signature is valid');
       if (data.status === 'COMPLETED') {
         console.log('Payment is completed');
-
-        const session = await retrieveOrder(data.order_id);
-
-        const newOrder = fulfillOrder(session.order)
-          .then(async () => {
-            await prisma.$disconnect();
-          })
-          .catch(async (e) => {
-            console.error(e);
-            await prisma.$disconnect();
-            process.exit(1);
-          });
+        try {
+          const order = await retrieveOrder(data.order_id);
+          const newOrder = await fulfillOrder(order);
+          console.log('Order fulfilled successfully', newOrder);
+        } catch (error) {
+          throw error;
+        }
       } else {
         console.log('Payment is not completed');
       }

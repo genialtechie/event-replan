@@ -3,7 +3,10 @@ import '@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css';
 import DatePicker from '@amir04lm26/react-modern-calendar-date-picker';
 import { utils } from '@amir04lm26/react-modern-calendar-date-picker';
 
-const MyDatePicker = ({ selectedDay, setSelectedDay }) => {
+const MyDatePicker = ({ selectedDay, setSelectedDay, disabledDays }) => {
+  const handleDisabledSelect = (day) => {
+    alert('This day is not available');
+  };
   const renderCustomInput = ({ ref }) => (
     <input
       ref={ref}
@@ -24,6 +27,8 @@ const MyDatePicker = ({ selectedDay, setSelectedDay }) => {
       onChange={setSelectedDay}
       renderInput={renderCustomInput}
       calendarClassName={styles.DatePicker__calendarContainer}
+      disabledDays={disabledDays || []}
+      onDisabledDayError={handleDisabledSelect}
       wrapperClassName={styles.DatePicker}
       minimumDate={utils().getToday()}
       colorPrimary="#a128b7"
