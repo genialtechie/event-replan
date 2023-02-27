@@ -32,7 +32,7 @@ const Cart = () => {
 
   return (
     cartOpen && (
-      <div className="h-full container bg-slate-800/30 fixed inset-x-0 inset-y-0 z-50 grid grid-cols-1 lg:grid-cols-3">
+      <div className="h-full w-full bg-slate-800/30 fixed inset-x-0 inset-y-0 z-50 grid grid-cols-1 lg:grid-cols-3">
         <div
           onClick={() => setCartOpen(false)}
           className="hidden lg:block bg-transparent opacity-0 lg:col-span-2 cursor-pointer"
