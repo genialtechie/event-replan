@@ -102,7 +102,7 @@ const Cart = () => {
                             </div>
                             <button
                               onClick={() => {
-                                item.quantity < 5 &&
+                                item.quantity < 1 &&
                                   dispatch({
                                     type: 'INCREASE_QUANTITY',
                                     payload: { ...item },
@@ -141,9 +141,10 @@ const Cart = () => {
               <h1 className="text-xl font-bold">Subtotal</h1>
               <span>
                 $
-                {state.cart.reduce((accumulator, obj) => {
+                {/* {state.cart.reduce((accumulator, obj) => {
                   return accumulator + obj.price * obj.quantity;
-                }, 0)}
+                }, 0)} */}
+                {state.cart.length * 50}
               </span>
             </div>
             <div className="flex flex-row justify-between mb-2">

@@ -60,8 +60,8 @@ const Policy = () => {
         </h1>
         <ul className="list-disc list-inside mb-10 text-lg">
           <li>
-            We require a $50 security deposit that will be deducted from your
-            total billed amount
+            We require a $50 delivery charge that will be added to your total
+            billed amount
           </li>
           <li>
             Security deposit will be refunded if all equipment is returned in

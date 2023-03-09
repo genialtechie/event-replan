@@ -81,7 +81,7 @@ export default function Product({ product }) {
         >
           <QtyInput
             min={1}
-            max={5}
+            max={1}
             label="Quantity"
             className="mb-5 block"
             value={qty}
@@ -101,8 +101,8 @@ export default function Product({ product }) {
             />
           </label>
           <p className="my-1 text-gray-500 text-xs">
-            *Please note that there is a refundable security deposit of $50 for
-            each product, see policy for more details.
+            *Please note that there is a non-refundable delivery charge of $50
+            for each product, see policy for more details.
           </p>
           <div className="my-3">
             <input
